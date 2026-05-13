@@ -67,6 +67,8 @@ public class Updater implements Download.Callback {
 
     private void doInBackground(Activity activity) {
         try {
+            Notify.show(ResUtil.getString(R.string.update_current_version, BuildConfig.VERSION_CODE));
+            Notify.show("URL:" + getJson());
             JSONObject object = new JSONObject(OkHttp.string(getJson()));
             String name = object.optString("name");
             String desc = object.optString("desc");
