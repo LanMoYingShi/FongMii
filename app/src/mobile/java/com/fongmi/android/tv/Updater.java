@@ -23,6 +23,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.Locale;
 
+import android.util.Log;
+
 public class Updater implements Download.Callback {
 
     private DialogUpdateBinding binding;
@@ -49,8 +51,10 @@ public class Updater implements Download.Callback {
         this.download = Download.create(getApk(), getFile());
     }
 
+//  手工检查更新
     public Updater force() {
         Notify.show(R.string.update_check);
+//      设置自动更新检查
         Setting.putUpdate(true);
         return this;
     }
@@ -62,20 +66,29 @@ public class Updater implements Download.Callback {
 
     public void start(Activity activity) {
         if (!Setting.getUpdate()) {
-            Notify.show(getJson());
             return;
         }
         Task.execute(() -> doInBackground(activity));
     }
 
     private void doInBackground(Activity activity) {
+        final String url = getJson();
+
         try {
-            JSONObject object = new JSONObject(OkHttp.string(getJson()));
+            String jsonResponse = OkHttp.string(url);
+            JSONObject object = new JSONObject(jsonResponse);
+
             String name = object.optString("name");
             String desc = object.optString("desc");
             int code = object.optInt("code");
-            if (code > BuildConfig.VERSION_CODE) App.post(() -> show(activity, name, desc));
+
+            // 检查版本并切回主线程显示 UI
+            if (code > BuildConfig.VERSION_CODE) {
+                App.post(() -> show(activity, name, desc));
+            }
         } catch (Exception e) {
+            App.post(() -> Notify.show(ResUtil.getString(R.string.update_error, url)));
+
             e.printStackTrace();
         }
     }
@@ -93,6 +106,7 @@ public class Updater implements Download.Callback {
     }
 
     private void cancel(View view) {
+//      如果有新版点击取消后将禁用升级检查
         Setting.putUpdate(false);
         download.cancel();
         dismiss();
