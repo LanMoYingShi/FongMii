@@ -76,7 +76,7 @@ public class Updater implements Download.Callback {
                 App.post(() -> show(activity, name, desc));
             else
                 if (this.isForceUpdate) {
-                    App.post(() -> Notify.show(R.string.update_islatest);
+                    App.post(() -> Notify.show(R.string.update_islatest));
                 }
         } catch (Exception e) {
             e.printStackTrace();
