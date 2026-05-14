@@ -68,10 +68,7 @@ public class Updater implements Download.Callback {
 
     public void start(Activity activity) {
         if (!Setting.getUpdate()) {
-            if (this.isForceUpdate) {
-                Notify.show(R.string.update_islatest);
-            }
-            return;
+            if (this.isForceUpdate) return;
         }
         Task.execute(() -> doInBackground(activity));
     }
@@ -88,9 +85,13 @@ public class Updater implements Download.Callback {
             int code = object.optInt("code");
 
             // 检查版本并切回主线程显示 UI
-            if (code > BuildConfig.VERSION_CODE) {
+            if (code > BuildConfig.VERSION_CODE)
                 App.post(() -> show(activity, name, desc));
+            else
+            if (this.isForceUpdate) {
+                App.post(() -> Notify.show(R.string.update_islatest);
             }
+
         } catch (Exception e) {
             App.post(() -> Notify.show(ResUtil.getString(R.string.update_error, url)));
 
