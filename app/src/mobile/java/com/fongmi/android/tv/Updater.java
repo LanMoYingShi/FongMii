@@ -26,6 +26,7 @@ import java.util.Locale;
 import android.util.Log;
 
 public class Updater implements Download.Callback {
+    private boolean isForceUpdate = false;
 
     private DialogUpdateBinding binding;
     private final Download download;
@@ -54,6 +55,7 @@ public class Updater implements Download.Callback {
 //  手工检查更新
     public Updater force() {
         Notify.show(R.string.update_check);
+        this.isForceUpdate = true;
 //      设置自动更新检查
         Setting.putUpdate(true);
         return this;
@@ -66,6 +68,9 @@ public class Updater implements Download.Callback {
 
     public void start(Activity activity) {
         if (!Setting.getUpdate()) {
+            if (this.isForceUpdate) {
+                Notify.show(R.string.update_islatest);
+            }
             return;
         }
         Task.execute(() -> doInBackground(activity));

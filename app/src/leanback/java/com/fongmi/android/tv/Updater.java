@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.Locale;
 
 public class Updater implements Download.Callback {
+    private boolean isForceUpdate = false;
 
     private DialogUpdateBinding binding;
     private final Download download;
@@ -50,6 +51,7 @@ public class Updater implements Download.Callback {
 
     public Updater force() {
         Notify.show(R.string.update_check);
+        this.isForceUpdate = true;
         Setting.putUpdate(true);
         return this;
     }
@@ -60,7 +62,12 @@ public class Updater implements Download.Callback {
     }
 
     public void start(Activity activity) {
-        if (!Setting.getUpdate()) return;
+        if (!Setting.getUpdate()) {
+            if (this.isForceUpdate) {
+                Notify.show(R.string.update_islatest);
+            }
+            return;
+        }
         Task.execute(() -> doInBackground(activity));
     }
 
