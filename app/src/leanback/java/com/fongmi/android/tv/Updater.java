@@ -67,11 +67,17 @@ public class Updater implements Download.Callback {
     }
 
     private void doInBackground(Activity activity) {
+        final String url = getJson();
+
         try {
-            JSONObject object = new JSONObject(OkHttp.string(getJson()));
+            String jsonResponse = OkHttp.string(url);
+            JSONObject object = new JSONObject(jsonResponse);
+
             String name = object.optString("name");
             String desc = object.optString("desc");
             int code = object.optInt("code");
+
+            // 检查版本并切回主线程显示 UI
             if (code > BuildConfig.VERSION_CODE)
                 App.post(() -> show(activity, name, desc));
             else
@@ -79,6 +85,8 @@ public class Updater implements Download.Callback {
                     App.post(() -> Notify.show(R.string.update_islatest));
                 }
         } catch (Exception e) {
+            App.post(() -> Notify.show(ResUtil.getString(R.string.update_error, url)));
+
             e.printStackTrace();
         }
     }

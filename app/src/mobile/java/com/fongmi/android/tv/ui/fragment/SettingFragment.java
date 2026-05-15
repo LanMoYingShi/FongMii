@@ -26,17 +26,20 @@ import com.fongmi.android.tv.databinding.FragmentSettingBinding;
 import com.fongmi.android.tv.db.AppDatabase;
 import com.fongmi.android.tv.event.ConfigEvent;
 import com.fongmi.android.tv.event.RefreshEvent;
+import com.fongmi.android.tv.impl.AccelerationCallback;
 import com.fongmi.android.tv.impl.Callback;
 import com.fongmi.android.tv.impl.ConfigCallback;
 import com.fongmi.android.tv.impl.LiveCallback;
 import com.fongmi.android.tv.impl.SiteCallback;
 import com.fongmi.android.tv.ui.activity.HomeActivity;
 import com.fongmi.android.tv.ui.base.BaseFragment;
+import com.fongmi.android.tv.ui.dialog.AccelerationDialog;
 import com.fongmi.android.tv.ui.dialog.ConfigDialog;
 import com.fongmi.android.tv.ui.dialog.HistoryDialog;
 import com.fongmi.android.tv.ui.dialog.LiveDialog;
 import com.fongmi.android.tv.ui.dialog.RestoreDialog;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
+import com.fongmi.android.tv.ui.dialog.UaDialog;
 import com.fongmi.android.tv.utils.FileChooser;
 import com.fongmi.android.tv.utils.FileUtil;
 import com.fongmi.android.tv.utils.Notify;
@@ -54,7 +57,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingFragment extends BaseFragment implements ConfigCallback, SiteCallback, LiveCallback {
+public class SettingFragment extends BaseFragment implements ConfigCallback, SiteCallback, LiveCallback, AccelerationCallback {
 
     private FragmentSettingBinding mBinding;
     private String[] size;
@@ -246,8 +249,13 @@ public class SettingFragment extends BaseFragment implements ConfigCallback, Sit
     }
 
     private boolean onLongVersion(View view) {
-        Notify.show(ResUtil.getString(R.string.update_current_version, BuildConfig.VERSION_CODE));
+        AccelerationDialog.create(this).show();
         return true;
+    }
+
+    @Override
+    public void setAccelerationUrl(String accelerationUrl) {
+        Setting.putAcceleration(accelerationUrl);
     }
 
     private void setWallDefault(View view) {

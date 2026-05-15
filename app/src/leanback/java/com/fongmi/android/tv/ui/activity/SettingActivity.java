@@ -23,6 +23,7 @@ import com.fongmi.android.tv.databinding.ActivitySettingBinding;
 import com.fongmi.android.tv.db.AppDatabase;
 import com.fongmi.android.tv.event.ConfigEvent;
 import com.fongmi.android.tv.event.RefreshEvent;
+import com.fongmi.android.tv.impl.AccelerationCallback;
 import com.fongmi.android.tv.impl.Callback;
 import com.fongmi.android.tv.impl.ConfigCallback;
 import com.fongmi.android.tv.impl.DohCallback;
@@ -35,6 +36,7 @@ import com.fongmi.android.tv.ui.dialog.HistoryDialog;
 import com.fongmi.android.tv.ui.dialog.LiveDialog;
 import com.fongmi.android.tv.ui.dialog.RestoreDialog;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
+import com.fongmi.android.tv.ui.dialog.AccelerationDialog;
 import com.fongmi.android.tv.utils.FileChooser;
 import com.fongmi.android.tv.utils.FileUtil;
 import com.fongmi.android.tv.utils.Notify;
@@ -50,7 +52,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingActivity extends BaseActivity implements ConfigCallback, SiteCallback, LiveCallback, DohCallback {
+public class SettingActivity extends BaseActivity implements ConfigCallback, SiteCallback, LiveCallback, DohCallback, AccelerationCallback {
 
     private ActivitySettingBinding mBinding;
     private String[] size;
@@ -113,6 +115,7 @@ public class SettingActivity extends BaseActivity implements ConfigCallback, Sit
         mBinding.wall.setOnClickListener(this::onWall);
         mBinding.size.setOnClickListener(this::setSize);
         mBinding.cache.setOnClickListener(this::onCache);
+        mBinding.cache.setOnLongClickListener(this::onLongCache);
         mBinding.backup.setOnClickListener(this::onBackup);
         mBinding.player.setOnClickListener(this::onPlayer);
         mBinding.restore.setOnClickListener(this::onRestore);
@@ -238,10 +241,13 @@ public class SettingActivity extends BaseActivity implements ConfigCallback, Sit
     }
 
     private boolean onLongVersion(View view) {
-        Notify.show(ResUtil.getString(R.string.update_current_version, BuildConfig.VERSION_CODE));
+        AccelerationDialog.create(this).show();
         return true;
     }
-
+    @Override
+    public void setAccelerationUrl(String accelerationUrl) {
+        Setting.putAcceleration(accelerationUrl);
+    }
     private void setWallDefault(View view) {
         Setting.putWall(Setting.getWall() == 4 ? 1 : Setting.getWall() + 1);
         Setting.putWallType(0);
@@ -282,12 +288,17 @@ public class SettingActivity extends BaseActivity implements ConfigCallback, Sit
     }
 
     private void onCache(View view) {
+        Notify.show(R.string.setting_cache_tip);
+    }
+
+    private boolean onLongCache(View view) {
         FileUtil.clearCache(new Callback() {
             @Override
             public void success() {
                 setCacheText();
             }
         });
+        return true;
     }
 
     private void onBackup(View view) {

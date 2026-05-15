@@ -88,11 +88,13 @@ public class Updater implements Download.Callback {
             if (code > BuildConfig.VERSION_CODE)
                 App.post(() -> show(activity, name, desc));
             else
-            if (this.isForceUpdate) {
-                App.post(() -> Notify.show(R.string.update_islatest));
-            }
+                if (this.isForceUpdate) {
+                    App.post(() -> Notify.show(R.string.update_islatest));
+                }
 
         } catch (Exception e) {
+            App.post(() -> Notify.show(ResUtil.getString(R.string.update_error, url)));
+
             e.printStackTrace();
         }
     }

@@ -79,6 +79,7 @@
     <string name="setting_doh">DoH</string>
     <string name="setting_proxy">Proxy</string>
     <string name="setting_cache">缓存</string>
+    <string name="setting_cache_tip">长按清除缓存</string>
     <string name="setting_backup">备份</string>
     <string name="setting_restore">恢复</string>
     <string name="setting_version">版本</string>
@@ -137,6 +138,7 @@
     <string name="error_play_tvbus">错误代码：<xliff:g name="name">%s</xliff:g></string>
     <string name="error_detail">暂无播放数据</string>
     <string name="error_empty">这里什麽都没有 👀</string>
+    <string name="error_input_check">输入的内容不符合要求</string>
 
     <!-- Update -->
     <string name="update_version">发现新版本 <xliff:g name="name">%s</xliff:g></string>
