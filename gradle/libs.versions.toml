@@ -2,7 +2,7 @@
 agp = "9.2.1"
 python = "17.0.0"
 minSdk = "24"
-targetSdk = "37"
+targetSdk = "28"
 compileSdk = "37"
 
 annotation = "1.10.0"
@@ -49,6 +49,9 @@ smbj = "0.14.0"
 textdrawable = "1.0.3"
 zxingAndroidEmbedded = "4.3.0"
 zxingCore = "3.5.4"
+
+#
+checkerqual = "3.42.0"
 
 [libraries]
 annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
@@ -106,6 +109,9 @@ smbj = { group = "com.hierynomus", name = "smbj", version.ref = "smbj" }
 textdrawable = { group = "com.github.jahirfiquitiva", name = "TextDrawable", version.ref = "textdrawable" }
 zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
+
+#
+checker-qual = { group = "org.checkerframework", name = "checker-qual", version.ref = "checkerqual" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
